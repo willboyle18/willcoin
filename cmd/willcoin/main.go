@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"github.com/willboyle18/willcoin/internal/blockchain"
 )
 
 func main() {
@@ -15,6 +16,10 @@ func main() {
 		case "init":
 			// create blockchain
 			fmt.Println("init")
+			bc := blockchain.NewBlockchain()
+			bc.AddBlock("data")
+			bc.AddBlock("data 2")
+			bc.PrintBlockchain()
 		case "add-block":
 			// add a block to the blockchain
 			fmt.Println("add-block")
