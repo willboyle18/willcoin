@@ -15,11 +15,7 @@ func main() {
 	switch command {
 		case "init":
 			// create blockchain
-			fmt.Println("init")
-			bc := blockchain.NewBlockchain()
-			bc.AddBlock("data")
-			bc.AddBlock("data 2")
-			bc.PrintBlockchain()
+			blockchain.NewBlockchain()
 		case "add-block":
 			// add a block to the blockchain
 			fmt.Println("add-block")

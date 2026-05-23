@@ -2,19 +2,31 @@ package blockchain
 
 import (
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"log"
+	"os"
 )
 
 type Blockchain struct {
 	Blocks []Block
 }
 
-func NewBlockchain() Blockchain {
+func NewBlockchain() {
 	genesisBlock := NewGenesisBlock()
 
-	return Blockchain{
-		Blocks: []Block{genesisBlock}, // Currently in memory, will change when persistence is implemented
+	err := os.Mkdir("data", 0750)
+	if err != nil && !os.IsExist(err) {
+		log.Fatal(err)
 	}
+	_, err = os.Create("data/blockchain.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	data, err := json.Marshal(genesisBlock)
+
+	os.WriteFile("data/blockchain.json", data, 0666)
 }
 
 func (bc *Blockchain) AddBlock(data string) {
