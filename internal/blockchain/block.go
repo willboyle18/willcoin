@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"hex"
 	"time"
 )
 
@@ -18,17 +17,19 @@ type Block struct {
 
 func calculateHash(index int, timestamp int64, data string, prevHash [32]byte) [32]byte {
 	stringPrevHash := hex.EncodeToString(prevHash[:])
-	record := fmt.Sprintf("%d%d%s%s", index, timestamp, data, stringPrevHash)
+	record := fmt.Sprintf("%d|%d|%s|%s", index, timestamp, data, stringPrevHash)
 	hash := sha256.Sum256([]byte(record))
 	return hash
 }
 
-func NewGenesisBlock() {
-	genesisData := "Genesis Block"
-	timestamp := time.Now().Unix()
-	index := 0
-	seedPrevHash := [32]byte{}
-	hash := calculateHash(index, timestamp, genesisData, seedPrevHash)
+func NewGenesisBlock() Block {
+	return NewBlock(0, "Genesis Block", [32]byte{})
+}
 
-	genesisBlock := Block{index, timestamp, genesisData, seedPrevHash, hash}
+func NewBlock(index int, data string, prevHash [32]byte) Block {
+	timestamp := time.Now().Unix()
+	hash := calculateHash(index, timestamp, data, prevHash)
+
+	block := Block{index, timestamp, data, prevHash, hash}
+	return block
 }
