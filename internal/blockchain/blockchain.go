@@ -1,6 +1,7 @@
 package blockchain
 
 import (
+	"bytes"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -15,7 +16,7 @@ type Blockchain struct {
 func NewBlockchain() {
 	genesisBlock := NewGenesisBlock()
 
-	err := os.Mkdir("data", 0750)
+	err := os.MkdirAll("data", 0750)
 	if err != nil && !os.IsExist(err) {
 		log.Fatal(err)
 	}
@@ -25,8 +26,10 @@ func NewBlockchain() {
 	}
 
 	data, err := json.Marshal(genesisBlock)
+	var out bytes.Buffer
+	json.Indent(&out, data, "", "\t")
 
-	os.WriteFile("data/blockchain.json", data, 0666)
+	os.WriteFile("data/blockchain.json", out.Bytes(), 0666)
 }
 
 func (bc *Blockchain) AddBlock(data string) {
