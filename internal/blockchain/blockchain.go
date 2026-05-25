@@ -1,9 +1,7 @@
 package blockchain
 
 import (
-	"bytes"
 	"encoding/hex"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -29,21 +27,6 @@ func NewBlockchain() {
 	writeBlockchain(blockchain)
 }
 
-func getBlockchain() []Block {
-	blockchainBytes, err := os.ReadFile("data/blockchain.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var blockchain []Block
-
-	err = json.Unmarshal(blockchainBytes, &blockchain)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return blockchain
-}
 
 func AddBlock(data string) {
 	blockchain := getBlockchain()
@@ -56,18 +39,6 @@ func AddBlock(data string) {
 	blockchain = append(blockchain, newBlock)
 
 	writeBlockchain(blockchain)
-}
-
-func writeBlockchain(blockchain []Block) {
-	data, err := json.Marshal(blockchain)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var out bytes.Buffer
-	json.Indent(&out, data, "", "\t")
-
-	os.WriteFile("data/blockchain.json", out.Bytes(), 0666)
 }
 
 func PrintBlockchain() {
