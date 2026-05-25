@@ -29,7 +29,7 @@ func NewBlockchain() {
 	writeBlockchain(blockchain)
 }
 
-func AddBlock(data string) {
+func getBlockchain() []Block {
 	blockchainBytes, err := os.ReadFile("data/blockchain.json")
 	if err != nil {
 		log.Fatal(err)
@@ -41,6 +41,12 @@ func AddBlock(data string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	return blockchain
+}
+
+func AddBlock(data string) {
+	blockchain := getBlockchain()
 
 	index := len(blockchain)
 	lastBlock := blockchain[index - 1]
@@ -64,8 +70,10 @@ func writeBlockchain(blockchain []Block) {
 	os.WriteFile("data/blockchain.json", out.Bytes(), 0666)
 }
 
-func (bc Blockchain) PrintBlockchain() {
-	for _, block := range bc.Blocks {
+func PrintBlockchain() {
+	blockchain := getBlockchain()
+
+	for _, block := range blockchain {
 		fmt.Println("Index:", block.Index)
 		fmt.Println("Timestamp:", block.Timestamp)
 		fmt.Println("Data:", block.Data)
