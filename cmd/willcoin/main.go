@@ -18,7 +18,7 @@ func main() {
 			blockchain.NewBlockchain()
 		case "add-block":
 			// add a block to the blockchain
-			fmt.Println("add-block")
+			blockchain.AddBlock("This is the second block")
 		case "print-chain":
 			// print all blocks on the blockchain
 			fmt.Println("print-chain")

@@ -10,11 +10,12 @@ import (
 )
 
 type Blockchain struct {
-	Blocks []Block
+	Blocks []Block `json:"blocks"`
 }
 
 func NewBlockchain() {
 	genesisBlock := NewGenesisBlock()
+	blockchain := []Block{genesisBlock}
 
 	err := os.MkdirAll("data", 0750)
 	if err != nil && !os.IsExist(err) {
@@ -25,23 +26,42 @@ func NewBlockchain() {
 		log.Fatal(err)
 	}
 
-	data, err := json.Marshal(genesisBlock)
+	writeBlockchain(blockchain)
+}
+
+func AddBlock(data string) {
+	blockchainBytes, err := os.ReadFile("data/blockchain.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var blockchain []Block
+
+	err = json.Unmarshal(blockchainBytes, &blockchain)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	index := len(blockchain)
+	lastBlock := blockchain[index - 1]
+	prevHash := lastBlock.Hash
+
+	newBlock := NewBlock(index, data, prevHash)
+	blockchain = append(blockchain, newBlock)
+
+	writeBlockchain(blockchain)
+}
+
+func writeBlockchain(blockchain []Block) {
+	data, err := json.Marshal(blockchain)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	var out bytes.Buffer
 	json.Indent(&out, data, "", "\t")
 
 	os.WriteFile("data/blockchain.json", out.Bytes(), 0666)
-}
-
-func (bc *Blockchain) AddBlock(data string) {
-	previousBlock := bc.Blocks[len(bc.Blocks)-1] // Currently in memory, will change when persistence is implemented
-
-	newBlock := NewBlock(
-		previousBlock.Index+1,
-		data,
-		previousBlock.Hash,
-	)
-
-	bc.Blocks = append(bc.Blocks, newBlock)
 }
 
 func (bc Blockchain) PrintBlockchain() {
