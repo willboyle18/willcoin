@@ -11,25 +11,25 @@ type Block struct {
 	Index int
 	Timestamp int64
 	Data string
-	PrevHash [32]byte
-	Hash [32]byte
+	PrevHash string
+	Hash string
 }
 
-func calculateHash(index int, timestamp int64, data string, prevHash [32]byte) [32]byte {
-	stringPrevHash := hex.EncodeToString(prevHash[:])
-	record := fmt.Sprintf("%d|%d|%s|%s", index, timestamp, data, stringPrevHash)
+func calculateHash(index int, timestamp int64, data string, prevHash string) string {
+	record := fmt.Sprintf("%d|%d|%s|%s", index, timestamp, data, prevHash)
 	hash := sha256.Sum256([]byte(record))
-	return hash
+	hashString := hex.EncodeToString(hash[:])
+	return hashString
 }
 
 func NewGenesisBlock() Block {
-	return NewBlock(0, "Genesis Block", [32]byte{})
+	return NewBlock(0, "Genesis Block", "")
 }
 
-func NewBlock(index int, data string, prevHash [32]byte) Block {
+func NewBlock(index int, data string, prevHash string) Block {
 	timestamp := time.Now().Unix()
 	hash := calculateHash(index, timestamp, data, prevHash)
 
-	block := Block{index, timestamp, data, prevHash, hash}
+	block := Block{index, timestamp, data, string(prevHash), string(hash)}
 	return block
 }

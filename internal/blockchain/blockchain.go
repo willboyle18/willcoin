@@ -1,7 +1,6 @@
 package blockchain
 
 import (
-	"encoding/hex"
 	"fmt"
 	"log"
 	"os"
@@ -48,8 +47,8 @@ func PrintBlockchain() {
 		fmt.Println("Index:", block.Index)
 		fmt.Println("Timestamp:", block.Timestamp)
 		fmt.Println("Data:", block.Data)
-		fmt.Println("PrevHash:", hex.EncodeToString(block.PrevHash[:]))
-		fmt.Println("Hash:", hex.EncodeToString(block.Hash[:]))
+		fmt.Println("PrevHash:", block.PrevHash)
+		fmt.Println("Hash:", block.Hash)
 		fmt.Println()
 	}
 }
