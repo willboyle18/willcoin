@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
+	"math/big"
 )
 
 type Blockchain struct {
@@ -35,7 +37,7 @@ func AddBlock(data string) {
 	lastBlock := blocks[index-1]
 	prevHash := lastBlock.Hash
 
-	newBlock := NewBlock(index, data, prevHash)
+	newBlock := NewBlock(index, data, 0, prevHash)
 	blocks = append(blocks, newBlock)
 	blockchain.Blocks = blocks
 
@@ -52,5 +54,34 @@ func PrintBlockchain() {
 		fmt.Println("PrevHash:", block.PrevHash)
 		fmt.Println("Hash:", block.Hash)
 		fmt.Println()
+	}
+}
+
+func MineBlock(data string) {
+	index := getNextIndex()
+	prevHash := getLastHash()
+	var nonce int64 = 0
+
+	targetHashStr := "0000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
+	targetHash := new(big.Int)
+	targetHash.SetString(targetHashStr, 16)
+
+	for true {
+		timestamp := time.Now().Unix()
+		hash := calculateHash(index, timestamp, data, nonce, prevHash)
+
+		hashStr := hash
+		convertedHash := new(big.Int)
+		convertedHash.SetString(hashStr, 16)
+
+		if convertedHash.Cmp(targetHash) < 0 {
+			fmt.Println("Mined with nonce value of", nonce)
+			minedBlock := Block{index, timestamp, data, nonce, hash, prevHash}
+			blockchain := getBlockchain()
+			blockchain.Blocks = append(blockchain.Blocks, minedBlock)
+			writeBlockchain(blockchain)
+			break
+		}
+		nonce++
 	}
 }

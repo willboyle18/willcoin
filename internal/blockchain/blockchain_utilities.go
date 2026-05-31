@@ -2,7 +2,10 @@ package blockchain
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 )
@@ -33,4 +36,21 @@ func getBlockchain() Blockchain {
 	}
 
 	return blockchain
+}
+
+func getLastHash() string {
+	blockchain := getBlockchain()
+	return blockchain.Blocks[len(blockchain.Blocks)-1].Hash
+}
+
+func getNextIndex() int {
+	blockchain := getBlockchain()
+	return len(blockchain.Blocks)
+}
+
+func calculateHash(index int, timestamp int64, data string, nonce int64, prevHash string) string {
+	record := fmt.Sprintf("%d|%d|%s|%d|%s", index, timestamp, data, nonce, prevHash)
+	hash := sha256.Sum256([]byte(record))
+	hashString := hex.EncodeToString(hash[:])
+	return hashString
 }

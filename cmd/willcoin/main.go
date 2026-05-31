@@ -25,6 +25,8 @@ func main() {
 	case "validate":
 		// validate blockchain
 		fmt.Println("validate")
+	case "mine":
+		blockchain.MineBlock("mined this block")
 	case "help":
 		// show user manual
 		fmt.Println("help")
