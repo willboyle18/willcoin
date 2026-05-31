@@ -8,11 +8,11 @@ import (
 )
 
 type Block struct {
-	Index int
-	Timestamp int64
-	Data string
-	PrevHash string
-	Hash string
+	Index int `json:"index"`
+	Timestamp int64 `json:"timestamp"`
+	Data string `json:"data"`
+	PrevHash string `json:"prev_hash"`
+	Hash string `json:"hash"`
 }
 
 func calculateHash(index int, timestamp int64, data string, prevHash string) string {

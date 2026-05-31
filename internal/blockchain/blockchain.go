@@ -12,7 +12,8 @@ type Blockchain struct {
 
 func NewBlockchain() {
 	genesisBlock := NewGenesisBlock()
-	blockchain := []Block{genesisBlock}
+	blocks := []Block{genesisBlock}
+	blockchain := Blockchain{blocks}
 
 	err := os.MkdirAll("data", 0750)
 	if err != nil && !os.IsExist(err) {
@@ -29,13 +30,15 @@ func NewBlockchain() {
 
 func AddBlock(data string) {
 	blockchain := getBlockchain()
+	blocks := blockchain.Blocks
 
-	index := len(blockchain)
-	lastBlock := blockchain[index - 1]
+	index := len(blocks)
+	lastBlock := blocks[index - 1]
 	prevHash := lastBlock.Hash
 
 	newBlock := NewBlock(index, data, prevHash)
-	blockchain = append(blockchain, newBlock)
+	blocks = append(blocks, newBlock)
+	blockchain.Blocks = blocks
 
 	writeBlockchain(blockchain)
 }
@@ -43,7 +46,7 @@ func AddBlock(data string) {
 func PrintBlockchain() {
 	blockchain := getBlockchain()
 
-	for _, block := range blockchain {
+	for _, block := range blockchain.Blocks {
 		fmt.Println("Index:", block.Index)
 		fmt.Println("Timestamp:", block.Timestamp)
 		fmt.Println("Data:", block.Data)

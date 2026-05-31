@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func writeBlockchain(blockchain []Block) {
+func writeBlockchain(blockchain Blockchain) {
 	data, err := json.Marshal(blockchain)
 	if err != nil {
 		log.Fatal(err)
@@ -20,13 +20,13 @@ func writeBlockchain(blockchain []Block) {
 }
 
 
-func getBlockchain() []Block {
+func getBlockchain() Blockchain {
 	blockchainBytes, err := os.ReadFile("data/blockchain.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var blockchain []Block
+	var blockchain Blockchain
 
 	err = json.Unmarshal(blockchainBytes, &blockchain)
 	if err != nil {
