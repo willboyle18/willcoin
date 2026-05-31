@@ -27,13 +27,12 @@ func NewBlockchain() {
 	writeBlockchain(blockchain)
 }
 
-
 func AddBlock(data string) {
 	blockchain := getBlockchain()
 	blocks := blockchain.Blocks
 
 	index := len(blocks)
-	lastBlock := blocks[index - 1]
+	lastBlock := blocks[index-1]
 	prevHash := lastBlock.Hash
 
 	newBlock := NewBlock(index, data, prevHash)
@@ -55,4 +54,3 @@ func PrintBlockchain() {
 		fmt.Println()
 	}
 }
-

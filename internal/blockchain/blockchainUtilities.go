@@ -1,10 +1,10 @@
 package blockchain
 
 import (
-	"encoding/json"
 	"bytes"
-	"os"
+	"encoding/json"
 	"log"
+	"os"
 )
 
 func writeBlockchain(blockchain Blockchain) {
@@ -18,7 +18,6 @@ func writeBlockchain(blockchain Blockchain) {
 
 	os.WriteFile("data/blockchain.json", out.Bytes(), 0666)
 }
-
 
 func getBlockchain() Blockchain {
 	blockchainBytes, err := os.ReadFile("data/blockchain.json")
